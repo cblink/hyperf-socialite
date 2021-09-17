@@ -3,12 +3,22 @@
 namespace Cblink\Hyperf\Socialite;
 
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
+use Hyperf\Contract\ConfigInterface;
+use Hyperf\Contract\ContainerInterface;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use InvalidArgumentException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class SocialiteManager extends Manager
 {
+    public function __construct(ContainerInterface $container)
+    {
+        $container
+            ->make(EventDispatcherInterface::class)
+            ->dispatch(new SocialiteWasCalled());
+    }
+
 
     public function getDefaultDriver()
     {

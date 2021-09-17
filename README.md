@@ -8,12 +8,91 @@ cblink/hyperf-socialite 组件衍生于 laravel/socialite 组件的，我们对�
 ## Installing
 
 ```shell
-$ composer require cblink/hyperf-socialite -vvv
+
+# 安装
+composer require cblink/hyperf-socialite -vvv
+
+# 创建配置文件
+php bin/hyperf.php vendor:publish cblink/hyperf-socialite
+
 ```
+
+## Configure
+
+配置文件位于 `config/autoload/socialite.php`，如文件不存在可自行创建
+
+```php
+<?php
+
+return [
+    'facebook' => [
+        'client_id' => '',
+        'client_secret' => '',
+        // 其他provider中需要使用的配置
+        // ...
+    ]   
+    // qq,weixin...    
+];
+
+```
+
 
 ## Usage
 
-TODO
+组件已经提供了许多已支持的社会化登陆组件，只需要将它配置到 `config/autoload/listeners.php` 中即可。
+
+```php
+
+return [
+    HyperfSocialiteProviders\Facebook\FacebookExtendSocialite::class,
+];
+
+```
+
+控制器中使用
+```php
+<?php
+
+use Cblink\Hyperf\Socialite\Contracts\SocialiteInterface;
+
+class Controller 
+{
+    
+    /**
+    * @param SocialiteInterface $socialite
+     * @return \Hyperf\HttpServer\Contract\ResponseInterface
+     */
+    public function redirectToProvider(SocialiteInterface $socialite)
+    {
+        // 重定向跳转
+       $redirect = $socialite->driver('facebook')->redirect();
+       
+       // 使用新的配置跳转
+       $socialite->driver('facebook')->setConfig([
+            'client_id' => 'xxx',
+            'client_secret' => 'xxxx',
+       ])  
+       
+       return $redirect; 
+    }
+    
+    /**
+    * @param SocialiteInterface $socialite
+    */
+    public function handleProviderCallback(SocialiteInterface $socialite)
+    {
+        // 获取用户信息
+       $user = $socialite->driver('facebook')->user();
+       
+       //
+       // $user->token;
+    }
+
+
+}
+
+```
+
 
 ## Contributing
 

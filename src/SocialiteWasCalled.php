@@ -14,19 +14,6 @@ class SocialiteWasCalled
     public const SERVICE_CONTAINER_PREFIX = 'SocialiteProviders.config.';
 
     /**
-     * @var ConfigInterface
-     */
-    private $configRetriever;
-
-    /**
-     * @param ConfigInterface $configRetriever
-     */
-    public function __construct(ConfigInterface $configRetriever)
-    {
-        $this->configRetriever = $configRetriever;
-    }
-
-    /**
      * @param  string  $providerName  'meetup'
      * @param  string  $providerClass  'Your\Name\Space\ClassNameProvider' must extend
      *                              either Laravel\Socialite\Two\AbstractProvider or
@@ -130,7 +117,7 @@ class SocialiteWasCalled
      */
     protected function getConfig(string $providerName)
     {
-        return $this->configRetriever->get(sprintf('socialite.%s', $providerName), []);
+        return make(ConfigInterface::class)->get(sprintf('socialite.%s', $providerName), []);
     }
 
     /**

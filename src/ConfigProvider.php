@@ -10,7 +10,7 @@ class ConfigProvider
     {
         return [
             'dependencies' => [
-                SocialiteInterface::class => Socialite::class,
+                SocialiteInterface::class => SocialiteManager::class,
             ],
             // 组件默认配置文件，即执行命令后会把 source 的对应的文件复制为 destination 对应的的文件
             'publish' => [
