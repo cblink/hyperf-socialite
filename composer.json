@@ -1,0 +1,37 @@
+{
+    "name": "cblink/hyperf-socialite",
+    "description": "socialite ",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nick",
+            "email": "me@xieying.vip"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "hyperf/http-message": "^2.2",
+        "hyperf/guzzle": "^2.2",
+        "hyperf/contract": "^2.2",
+        "hyperf/http-server": "^2.2",
+        "league/oauth1-client": "^1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cblink\\Hyperf\\Socialite\\": "src/",
+            "HyperfSocialiteProviders\\": "providers/"
+        }
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Cblink\\Hyperf\\Socialite\\ConfigProvider"
+        }
+    },
+    "scripts": {
+        "fix": "./vendor/bin/php-cs-fixer fix --using-cache=no --config=.php_cs --ansi"
+    }
+}
