@@ -1,11 +1,15 @@
 <?php
 
-namespace HyperfSocialiteProviders\WeChatWeb;
+namespace HyperfSocialiteProviders\Feishu;
 
 use Cblink\Hyperf\Socialite\SocialiteWasCalled;
 use Hyperf\Event\Contract\ListenerInterface;
 
-class WeChatWebExtendSocialite implements ListenerInterface
+/**
+ * Class FeishuExtendSocialite
+ * @package Cblink\Socialite\Feishu
+ */
+class FeishuExtendSocialite implements ListenerInterface
 {
     public function listen(): array
     {
@@ -19,6 +23,6 @@ class WeChatWebExtendSocialite implements ListenerInterface
      */
     public function process(object $event)
     {
-        $event->extendSocialite('wechat_web', Provider::class);
+        $event->extendSocialite('feishu', Provider::class);
     }
 }

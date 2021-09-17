@@ -4,25 +4,31 @@ namespace Cblink\Hyperf\Socialite;
 
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Contract\ContainerInterface;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use InvalidArgumentException;
-use Psr\EventDispatcher\EventDispatcherInterface;
 
 class SocialiteManager extends Manager
 {
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $container
-            ->make(EventDispatcherInterface::class)
-            ->dispatch(new SocialiteWasCalled());
+        $this->init();
     }
-
 
     public function getDefaultDriver()
     {
-        throw new InvalidArgumentException('No Socialite driver was specified.');
+        throw new SocialiteException('No Socialite driver was specified.');
+    }
+
+    /**
+     *
+     */
+    public function init()
+    {
+        $wasCalled = new SocialiteWasCalled();
+
+        foreach ($this->getProviders() as $key => $provider) {
+            $wasCalled->extendSocialite($key, $provider);
+        }
     }
 
     /**
@@ -37,6 +43,14 @@ class SocialiteManager extends Manager
             make(RequestInterface::class),
             make(SessionInterface::class)
         );
+    }
+
+    /**
+     * @return array
+     */
+    protected function getProviders()
+    {
+        return make(ConfigInterface::class)->get(sprintf('socialite.providers'), []);
     }
 
     /**

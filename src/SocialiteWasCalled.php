@@ -117,7 +117,7 @@ class SocialiteWasCalled
      */
     protected function getConfig(string $providerName)
     {
-        return make(ConfigInterface::class)->get(sprintf('socialite.%s', $providerName), []);
+        return make(ConfigInterface::class)->get(sprintf('socialite.config.%s', $providerName), []);
     }
 
     /**

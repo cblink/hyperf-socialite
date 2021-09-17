@@ -3,9 +3,9 @@
 namespace HyperfSocialiteProviders\WeixinWeb;
 
 use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Arr;
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Cblink\Hyperf\Socialite\Two\User;
+use Hyperf\Utils\Arr;
 
 class Provider extends AbstractProvider
 {
@@ -37,7 +37,7 @@ class Provider extends AbstractProvider
     /**
      * {@inheritdoc}.
      */
-    protected function getAuthUrl($state)
+    public function getAuthUrl($state)
     {
         //return $this->buildAuthUrlFromBase('https://open.weixin.qq.com/connect/qrconnect', $state);
         return $this->buildAuthUrlFromBase($this->getConfig(

@@ -44,7 +44,7 @@ class Provider extends AbstractProvider
      *
      * @see \Cblink\Hyperf\Socialite\Two\AbstractProvider::getAuthUrl()
      */
-    protected function getAuthUrl($state)
+    public function getAuthUrl($state)
     {
         return $this->buildAuthUrlFromBase('https://graph.qq.com/oauth2.0/authorize', $state);
     }

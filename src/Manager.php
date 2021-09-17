@@ -4,7 +4,6 @@ namespace Cblink\Hyperf\Socialite;
 
 use Closure;
 use Hyperf\Utils\Str;
-use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 
 abstract class Manager
@@ -36,14 +35,14 @@ abstract class Manager
      * @param  string|null  $driver
      * @return mixed
      *
-     * @throws \InvalidArgumentException
+     * @throws SocialiteException
      */
     public function driver($driver = null)
     {
         $driver = $driver ?: $this->getDefaultDriver();
 
         if (is_null($driver)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new SocialiteException(sprintf(
                 'Unable to resolve NULL driver for [%s].', static::class
             ));
         }
@@ -117,29 +116,6 @@ abstract class Manager
     public function getDrivers()
     {
         return $this->drivers;
-    }
-
-    /**
-     * Get the container instance used by the manager.
-     *
-     * @return \Illuminate\Contracts\Container\Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Set the container instance used by the manager.
-     *
-     * @param  \Illuminate\Contracts\Container\Container  $container
-     * @return $this
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-
-        return $this;
     }
 
     /**

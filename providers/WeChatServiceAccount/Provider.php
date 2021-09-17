@@ -23,7 +23,7 @@ class Provider extends AbstractProvider
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
+    public function getAuthUrl($state)
     {
         return $this->buildAuthUrlFromBase('https://open.weixin.qq.com/connect/oauth2/authorize', $state);
     }

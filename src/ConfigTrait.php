@@ -9,15 +9,19 @@ trait ConfigTrait
     /**
      * @var array
      */
-    protected array $config;
-
+    protected array $config = [];
 
     /**
      * @param array $config
+     * @param bool $cover
      * @return $this
      */
-    public function setConfig(array $config = [])
+    public function setConfig(array $config = [], bool $cover = true)
     {
+        if (!$cover) {
+            $config = array_merge($this->config, $config);
+        }
+
         $this->config = $config;
 
         return $this;

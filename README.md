@@ -90,8 +90,21 @@ class Controller
 
 
 }
-
 ```
+
+### 支持的列表
+
+|  支持应用   | 驱动名称  |
+|  ----  | ----  |
+| 微博  | weibo |
+| QQ  | qq |
+| Facebook  | facebook |
+| Instagram  | instagram |
+| YouTube | youtube |
+| 飞书自建应用  | feishu |
+| 微信公众号 | weixin |
+| 微信PC网站登陆 | weixinweb |
+| 微信开放平台代公众号授权 | wechat_service_account |
 
 
 ## Contributing
