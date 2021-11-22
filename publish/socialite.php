@@ -3,7 +3,7 @@
 return [
     // auto load providers
     'providers' => [
-        // 'feishu' => \HyperfSocialiteProviders\Feishu\Provider::class,
+        // \HyperfSocialiteProviders\Feishu\Provider::class,
     ],
     'config' => [
         /*

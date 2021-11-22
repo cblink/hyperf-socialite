@@ -25,13 +25,20 @@ php bin/hyperf.php vendor:publish cblink/hyperf-socialite
 <?php
 
 return [
-    'facebook' => [
-        'client_id' => '',
-        'client_secret' => '',
-        // 其他provider中需要使用的配置
-        // ...
-    ]   
-    // qq,weixin...    
+    // 需要加载的provider
+    'providers' => [
+        // \HyperfSocialiteProviders\Feishu\Provider::class,
+    ],
+    'config' => [
+        'facebook' => [
+            'client_id' => '',
+            'client_secret' => '',
+            // 其他provider中需要使用的配置
+            // ...
+        ],
+        // qq,weixin...    ]()
+    ],
+    
 ];
 
 ```

@@ -5,6 +5,7 @@ namespace Cblink\Hyperf\Socialite;
 use Closure;
 use Hyperf\Utils\Str;
 use InvalidArgumentException;
+use Psr\Container\ContainerInterface;
 
 abstract class Manager
 {
@@ -21,6 +22,11 @@ abstract class Manager
      * @var array
      */
     protected $drivers = [];
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * Get the default driver name.
@@ -91,7 +97,7 @@ abstract class Manager
      */
     protected function callCustomCreator($driver)
     {
-        return $this->customCreators[$driver]($this->container);
+        return $this->customCreators[$driver]();
     }
 
     /**
@@ -128,6 +134,24 @@ abstract class Manager
         $this->drivers = [];
 
         return $this;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @return $this
+     */
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     /**

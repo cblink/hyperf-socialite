@@ -6,29 +6,24 @@ use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Utils\ApplicationContext;
 
 class SocialiteManager extends Manager
 {
     public function __construct()
     {
-        $this->init();
+        $this->setContainer(ApplicationContext::getContainer());
+
+        $wasCalled = new SocialiteWasCalled();
+
+        foreach ($this->getProviders() as $provider) {
+            $wasCalled->extendSocialite($this, $provider);
+        }
     }
 
     public function getDefaultDriver()
     {
         throw new SocialiteException('No Socialite driver was specified.');
-    }
-
-    /**
-     *
-     */
-    public function init()
-    {
-        $wasCalled = new SocialiteWasCalled();
-
-        foreach ($this->getProviders() as $key => $provider) {
-            $wasCalled->extendSocialite($key, $provider);
-        }
     }
 
     /**
@@ -39,10 +34,11 @@ class SocialiteManager extends Manager
      */
     public function buildProvider($provider)
     {
-        return new $provider(
-            make(RequestInterface::class),
-            make(SessionInterface::class)
-        );
+        $session = $this->getContainer()->has(SessionInterface::class) ?
+            $this->getContainer()->get(SessionInterface::class) :
+            null;
+
+        return new $provider($this->getContainer()->get(RequestInterface::class), $session);
     }
 
     /**
@@ -50,7 +46,9 @@ class SocialiteManager extends Manager
      */
     protected function getProviders()
     {
-        return make(ConfigInterface::class)->get(sprintf('socialite.providers'), []);
+        return $this->getContainer()
+            ->get(ConfigInterface::class)
+            ->get(sprintf('socialite.providers'), []);
     }
 
     /**

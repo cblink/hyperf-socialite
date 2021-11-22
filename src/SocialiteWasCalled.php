@@ -22,17 +22,16 @@ class SocialiteWasCalled
      *
      * @return void
      */
-    public function extendSocialite($providerName, $providerClass, $oauth1Server = null)
+    public function extendSocialite(SocialiteManager $socialite, $providerClass, $oauth1Server = null)
     {
         $this->classExists($providerClass);
+
+        $providerName = strtolower($providerClass::IDENTIFIER);
 
         if ($this->isOAuth1($oauth1Server)) {
             $this->classExists($oauth1Server);
             $this->classExtends($providerClass, SocialiteOAuth1AbstractProvider::class);
         }
-
-        /* @var SocialiteManager $socialite */
-        $socialite = make(SocialiteManager::class);
 
         $socialite->extend(
             $providerName,
