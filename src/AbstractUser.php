@@ -50,6 +50,11 @@ abstract class AbstractUser implements ArrayAccess, User
     public $user;
 
     /**
+     * @var string
+     */
+    public $mobile;
+
+    /**
      * Get the unique identifier for the user.
      *
      * @return string
@@ -97,6 +102,14 @@ abstract class AbstractUser implements ArrayAccess, User
     public function getAvatar()
     {
         return $this->avatar;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMobile()
+    {
+        return $this->mobile;
     }
 
     /**
