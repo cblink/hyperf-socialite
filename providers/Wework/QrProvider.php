@@ -11,7 +11,7 @@ class QrProvider extends AbstractProvider
     /**
      * Unique Provider Identifier.
      */
-    public const IDENTIFIER = 'WEWORK_QR';
+    public const IDENTIFIER = 'WEWORKQR';
 
     /**
      * {@inheritdoc}.

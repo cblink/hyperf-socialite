@@ -12,7 +12,7 @@ class ThirdQrProvider extends AbstractProvider
     /**
      * Unique Provider Identifier.
      */
-    public const IDENTIFIER = 'THIRD_WEWORK_QR';
+    public const IDENTIFIER = 'THIRD_WEWORKQR';
 
     /**
      * @var string ticket
