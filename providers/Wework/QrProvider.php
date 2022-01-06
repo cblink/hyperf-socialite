@@ -1,45 +1,24 @@
 <?php
 
-namespace HyperfSocialiteProviders\WeixinWeb;
+namespace HyperfSocialiteProviders\Wework;
 
-use GuzzleHttp\RequestOptions;
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Cblink\Hyperf\Socialite\Two\User;
-use Hyperf\Utils\Arr;
+use GuzzleHttp\RequestOptions;
 
-class Provider extends AbstractProvider
+class QrProvider extends AbstractProvider
 {
     /**
      * Unique Provider Identifier.
      */
-    public const IDENTIFIER = 'WEWORK';
-
-    /**
-     * @var string
-     */
-    protected $openId;
-
-    /**
-     * {@inheritdoc}.
-     */
-    protected $scopes = ['snsapi_base'];
-
-    /**
-     * set Open Id.
-     *
-     * @param string $openId
-     */
-    public function setOpenId($openId)
-    {
-        $this->openId = $openId;
-    }
+    public const IDENTIFIER = 'WEWORK_QR';
 
     /**
      * {@inheritdoc}.
      */
     public function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://open.weixin.qq.com/connect/oauth2/authorize', $state);
+        return $this->buildAuthUrlFromBase('https://open.work.weixin.qq.com/wwopen/sso/qrConnect', $state);
     }
 
     /**
@@ -49,7 +28,7 @@ class Provider extends AbstractProvider
     {
         $query = http_build_query($this->getCodeFields($state), '', '&', $this->encodingType);
 
-        return $url.'?'.$query.'#wechat_redirect';
+        return $url.'?'.$query;
     }
 
     /**
@@ -59,10 +38,10 @@ class Provider extends AbstractProvider
     {
         return [
             'appid'         => $this->getClientId(),
+            'agentid'       => $this->getAgentId(),
             'redirect_uri' => $this->getRedirectUrl(),
-            'response_type' => 'code',
-            'scope'         => $this->formatScopes($this->scopes, $this->scopeSeparator),
             'state'         => $state,
+            'lang'          => 'zh',
         ];
     }
 
@@ -71,7 +50,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo';
+        return 'https://qyapi.weixin.qq.com/cgi-bin/gettoken';
     }
 
     /**
@@ -82,7 +61,7 @@ class Provider extends AbstractProvider
         $response = $this->getHttpClient()->get('https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo', [
             RequestOptions::QUERY => [
                 'access_token' => $token,
-                'code' => $this->getCode(),
+                'code'       => $this->getCode(),
             ],
         ]);
 
@@ -94,12 +73,17 @@ class Provider extends AbstractProvider
      */
     protected function mapUserToObject(array $user)
     {
+        if (!array_key_exists('UserId',$user)) {
+            throw new \RuntimeException('getuserinfo fail');
+        }
+
         return (new User())->setRaw($user)->map([
-            'id'       => Arr::get($user, 'openid'),
-            'unionid'  => Arr::get($user, 'unionid'),
-            'nickname' => $user['nickname'],
-            'avatar'   => $user['headimgurl'],
-            'name'     => null, 'email' => null,
+            'id'       => $user['UserId'],
+            'unionid'  => null,
+            'nickname' => null,
+            'avatar'   => null,
+            'name'     => null,
+            'email'    => null,
         ]);
     }
 
@@ -123,10 +107,14 @@ class Provider extends AbstractProvider
             RequestOptions::QUERY => $this->getTokenFields($code),
         ]);
 
-        $this->credentialsResponseBody = json_decode((string) $response->getBody(), true);
-        $this->openId = $this->credentialsResponseBody['openid'];
+        return json_decode((string) $response->getBody(), true);
+    }
 
-        //return $this->parseAccessToken($response->getBody());
-        return $this->credentialsResponseBody;
+    /**
+     * @return array|\ArrayAccess|mixed
+     */
+    public function getAgentId()
+    {
+        return $this->getConfig('agent_id');
     }
 }

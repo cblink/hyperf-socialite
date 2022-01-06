@@ -1,23 +1,17 @@
 <?php
 
-namespace HyperfSocialiteProviders\WeixinWeb;
+namespace HyperfSocialiteProviders\Wework;
 
-use GuzzleHttp\RequestOptions;
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Cblink\Hyperf\Socialite\Two\User;
-use Hyperf\Utils\Arr;
+use GuzzleHttp\RequestOptions;
 
-class Provider extends AbstractProvider
+class ThirdProvider extends AbstractProvider
 {
     /**
      * Unique Provider Identifier.
      */
-    public const IDENTIFIER = 'WEWORK';
-
-    /**
-     * @var string
-     */
-    protected $openId;
+    public const IDENTIFIER = 'THIRD_WEWORK';
 
     /**
      * {@inheritdoc}.
@@ -25,14 +19,9 @@ class Provider extends AbstractProvider
     protected $scopes = ['snsapi_base'];
 
     /**
-     * set Open Id.
-     *
-     * @param string $openId
+     * @var string ticket
      */
-    public function setOpenId($openId)
-    {
-        $this->openId = $openId;
-    }
+    protected $ticket;
 
     /**
      * {@inheritdoc}.
@@ -71,7 +60,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo';
+        return 'https://qyapi.weixin.qq.com/cgi-bin/service/get_suite_token';
     }
 
     /**
@@ -79,14 +68,16 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get('https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo', [
+        $response = $this->getHttpClient()->get('https://qyapi.weixin.qq.com/cgi-bin/service/getuserinfo3rd', [
             RequestOptions::QUERY => [
-                'access_token' => $token,
-                'code' => $this->getCode(),
+                'suite_access_token' => $token,
+                'code'       => $this->getCode(),
             ],
         ]);
 
-        return json_decode((string) $response->getBody(), true);
+        $user = json_decode((string) $response->getBody(), true);
+
+        return $user;
     }
 
     /**
@@ -95,11 +86,12 @@ class Provider extends AbstractProvider
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'       => Arr::get($user, 'openid'),
-            'unionid'  => Arr::get($user, 'unionid'),
-            'nickname' => $user['nickname'],
-            'avatar'   => $user['headimgurl'],
-            'name'     => null, 'email' => null,
+            'id'       => $user['UserId'] ?? $user['OpenId'] ?? null,
+            'unionid'  => $user['open_userid'] ?? null,
+            'nickname' => null,
+            'avatar'   => null,
+            'name'     => null,
+            'email'    => null,
         ]);
     }
 
@@ -109,8 +101,9 @@ class Provider extends AbstractProvider
     protected function getTokenFields($code)
     {
         return [
-            'corpid' => $this->getClientId(),
-            'corpsecret' => $this->getClientSecret(),
+            'suite_id' => $this->getClientId(),
+            'suite_secret' => $this->getClientSecret(),
+            'suite_ticket' => $this->getTicket(),
         ];
     }
 
@@ -123,10 +116,19 @@ class Provider extends AbstractProvider
             RequestOptions::QUERY => $this->getTokenFields($code),
         ]);
 
-        $this->credentialsResponseBody = json_decode((string) $response->getBody(), true);
-        $this->openId = $this->credentialsResponseBody['openid'];
+        return json_decode((string) $response->getBody(), true);
+    }
 
-        //return $this->parseAccessToken($response->getBody());
-        return $this->credentialsResponseBody;
+    public function setTicket($ticket)
+    {
+        $this->ticket = $ticket;
+    }
+
+    /**
+     * @return array|\ArrayAccess|mixed
+     */
+    protected function getTicket()
+    {
+        return $this->ticket;
     }
 }
