@@ -54,20 +54,14 @@ class ThirdQrProvider extends AbstractProvider
     /**
      * {@inheritdoc}.
      */
-    protected function getTokenUrl()
-    {
-        return 'https://qyapi.weixin.qq.com/cgi-bin/service/get_provider_token';
-    }
-
-    /**
-     * {@inheritdoc}.
-     */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get('https://qyapi.weixin.qq.com/cgi-bin/service/get_login_info', [
+        $response = $this->getHttpClient()->request('POST','https://qyapi.weixin.qq.com/cgi-bin/service/get_login_info', [
+            RequestOptions::JSON => [
+                'auth_code'    => $this->getCode(),
+            ],
             RequestOptions::QUERY => [
                 'access_token' => $token,
-                'auth_code'    => $this->getCode(),
             ],
         ]);
 
@@ -81,9 +75,13 @@ class ThirdQrProvider extends AbstractProvider
      */
     protected function mapUserToObject(array $user)
     {
+        if (!array_key_exists('user_info', $user) || !array_key_exists('userid',$user['user_info'])) {
+            throw new \RuntimeException('getuserinfo fail:' . json_encode($user));
+        }
+
         return (new User())->setRaw($user)->map([
-            'id'       => $user['UserId'] ?? $user['OpenId'] ?? null,
-            'unionid'  => $user['open_userid'] ?? null,
+            'id'       => $user['user_info']['userid'],
+            'unionid'  => $user['user_info']['open_userid'] ?? null,
             'nickname' => null,
             'avatar'   => null,
             'name'     => null,
@@ -105,13 +103,27 @@ class ThirdQrProvider extends AbstractProvider
     /**
      * {@inheritdoc}.
      */
+    protected function getTokenUrl()
+    {
+        return 'https://qyapi.weixin.qq.com/cgi-bin/service/get_provider_token';
+    }
+
+    /**
+     * {@inheritdoc}.
+     */
     public function getAccessTokenResponse($code)
     {
-        $response = $this->getHttpClient()->get($this->getTokenUrl(), [
-            RequestOptions::QUERY => $this->getTokenFields($code),
+        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
+            RequestOptions::JSON => $this->getTokenFields($code),
         ]);
 
-        return json_decode((string) $response->getBody(), true);
+        $body = json_decode((string) $response->getBody(), true);
+
+        if (!array_key_exists('provider_access_token', $body)) {
+            throw new \RuntimeException('get token fail:' . json_encode($body));
+        }
+
+        return $body;
     }
 
     /**
