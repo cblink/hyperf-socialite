@@ -15,6 +15,7 @@ use Cblink\Hyperf\Socialite\Contracts\Provider as ProviderContract;
 use Cblink\Hyperf\Socialite\Contracts\User;
 use InvalidArgumentException;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractProvider implements ProviderContract
 {
@@ -557,5 +558,14 @@ abstract class AbstractProvider implements ProviderContract
     public function session()
     {
         return $this->session ?: new Collection();
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function logger()
+    {
+        return make(\Hyperf\Logger\LoggerFactory::class)
+            ->get('default', 'default');
     }
 }

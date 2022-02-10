@@ -10,6 +10,7 @@ use League\OAuth1\Client\Credentials\TokenCredentials;
 use Cblink\Hyperf\Socialite\Contracts\Provider as ProviderContract;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use League\OAuth1\Client\Server\Server;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractProvider implements ProviderContract
 {
@@ -201,5 +202,14 @@ abstract class AbstractProvider implements ProviderContract
     public function session()
     {
         return $this->session ?: new Collection();
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function logger()
+    {
+        return make(\Hyperf\Logger\LoggerFactory::class)
+            ->get('default', 'default');
     }
 }

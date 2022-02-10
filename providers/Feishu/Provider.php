@@ -67,6 +67,11 @@ class Provider extends AbstractProvider
 
         $user = json_decode($response->getBody(), true);
 
+        $this->logger()->info('request feishu', [
+            'code' => $this->getCode(),
+            'response' => $user
+        ]);
+
         return $user['data'];
     }
 
