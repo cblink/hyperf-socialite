@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^7.4",
         "ext-json": "*",
         "hyperf/http-message": "^2.2",
         "hyperf/guzzle": "^2.2",
