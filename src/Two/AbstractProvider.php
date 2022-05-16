@@ -92,6 +92,11 @@ abstract class AbstractProvider implements ProviderContract
     protected $user;
 
     /**
+     * @var array
+     */
+    protected $credentialsResponseBody;
+
+    /**
      * Create a new provider instance.
      *
      * @param RequestInterface $request
