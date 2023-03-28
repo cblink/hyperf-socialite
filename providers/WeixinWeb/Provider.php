@@ -9,10 +9,7 @@ use Hyperf\Utils\Arr;
 
 class Provider extends AbstractProvider
 {
-    /**
-     * Unique Provider Identifier.
-     */
-    public const IDENTIFIER = 'WEWORK';
+    public const IDENTIFIER = 'WEIXINWEB';
 
     /**
      * @var string
@@ -22,7 +19,7 @@ class Provider extends AbstractProvider
     /**
      * {@inheritdoc}.
      */
-    protected $scopes = ['snsapi_base'];
+    protected $scopes = ['snsapi_login'];
 
     /**
      * set Open Id.
@@ -39,7 +36,11 @@ class Provider extends AbstractProvider
      */
     public function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://open.weixin.qq.com/connect/oauth2/authorize', $state);
+        //return $this->buildAuthUrlFromBase('https://open.weixin.qq.com/connect/qrconnect', $state);
+        return $this->buildAuthUrlFromBase($this->getConfig(
+            'auth_base_uri',
+            'https://open.weixin.qq.com/connect/qrconnect'
+        ), $state);
     }
 
     /**
@@ -59,7 +60,7 @@ class Provider extends AbstractProvider
     {
         return [
             'appid'         => $this->getClientId(),
-            'redirect_uri' => $this->getRedirectUrl(),
+            'redirect_uri'  => $this->getRedirectUrl(),
             'response_type' => 'code',
             'scope'         => $this->formatScopes($this->scopes, $this->scopeSeparator),
             'state'         => $state,
@@ -71,7 +72,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo';
+        return 'https://api.weixin.qq.com/sns/oauth2/access_token';
     }
 
     /**
@@ -79,10 +80,11 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get('https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo', [
+        $response = $this->getHttpClient()->get('https://api.weixin.qq.com/sns/userinfo', [
             RequestOptions::QUERY => [
                 'access_token' => $token,
-                'code' => $this->getCode(),
+                'openid'       => $this->openId,
+                'lang'         => 'zh_CN',
             ],
         ]);
 
@@ -99,7 +101,8 @@ class Provider extends AbstractProvider
             'unionid'  => Arr::get($user, 'unionid'),
             'nickname' => $user['nickname'],
             'avatar'   => $user['headimgurl'],
-            'name'     => null, 'email' => null,
+            'name'     => null,
+            'email' => null,
         ]);
     }
 
@@ -109,8 +112,9 @@ class Provider extends AbstractProvider
     protected function getTokenFields($code)
     {
         return [
-            'corpid' => $this->getClientId(),
-            'corpsecret' => $this->getClientSecret(),
+            'appid' => $this->getClientId(),
+            'secret' => $this->getClientSecret(),
+            'code'  => $code, 'grant_type' => 'authorization_code',
         ];
     }
 
@@ -128,5 +132,13 @@ class Provider extends AbstractProvider
 
         //return $this->parseAccessToken($response->getBody());
         return $this->credentialsResponseBody;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function additionalConfigKeys()
+    {
+        return ['auth_base_uri'];
     }
 }

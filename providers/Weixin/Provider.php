@@ -57,7 +57,8 @@ class Provider extends AbstractProvider
     protected function getCodeFields($state = null)
     {
         return [
-            'appid'         => $this->getClientId(), 'redirect_uri' => $this->getRedirectUrl(),
+            'appid'         => $this->getClientId(),
+            'redirect_uri'  => $this->getRedirectUrl(),
             'response_type' => 'code',
             'scope'         => $this->formatScopes($this->scopes, $this->scopeSeparator),
             'state'         => $state,
@@ -115,7 +116,8 @@ class Provider extends AbstractProvider
     protected function getTokenFields($code)
     {
         return [
-            'appid' => $this->getClientId(), 'secret' => $this->getClientSecret(),
+            'appid' => $this->getClientId(),
+            'secret' => $this->getClientSecret(),
             'code'  => $code, 'grant_type' => 'authorization_code',
         ];
     }
