@@ -32,7 +32,7 @@ trait ConfigTrait
      * @param null $default
      * @return array|\ArrayAccess|mixed
      */
-    protected function getConfig($key, $default = null)
+    public function getConfig($key, $default = null)
     {
         return Arr::get($this->config, $key, $default);
     }
@@ -40,7 +40,7 @@ trait ConfigTrait
     /**
      * @return array|\ArrayAccess|mixed
      */
-    protected function getClientId()
+    public function getClientId()
     {
         return $this->getConfig('client_id');
     }
@@ -48,7 +48,7 @@ trait ConfigTrait
     /**
      * @return array|\ArrayAccess|mixed
      */
-    protected function getClientSecret()
+    public function getClientSecret()
     {
         return $this->getConfig('client_secret');
     }
@@ -56,7 +56,7 @@ trait ConfigTrait
     /**
      * @return array|\ArrayAccess|mixed
      */
-    protected function getRedirectUrl()
+    public function getRedirectUrl()
     {
         return $this->getConfig('redirect_url');
     }
