@@ -45,17 +45,6 @@ return [
 
 
 ## Usage
-
-组件已经提供了许多已支持的社会化登陆组件，只需要将它配置到 `config/autoload/listeners.php` 中即可。
-
-```php
-
-return [
-    HyperfSocialiteProviders\Facebook\FacebookExtendSocialite::class,
-];
-
-```
-
 控制器中使用
 ```php
 <?php
