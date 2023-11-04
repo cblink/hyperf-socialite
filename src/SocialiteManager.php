@@ -2,13 +2,14 @@
 
 namespace Cblink\Hyperf\Socialite;
 
+use Cblink\Hyperf\Socialite\Contracts\SocialiteInterface;
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\ApplicationContext;
 
-class SocialiteManager extends Manager
+class SocialiteManager extends Manager implements SocialiteInterface
 {
     public function __construct()
     {
