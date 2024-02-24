@@ -16,7 +16,7 @@ class Provider extends AbstractProvider
     /**
      * {@inheritdoc}.
      */
-    protected $scopes = ['snsapi_base'];
+    protected $scopes = ['snsapi_privateinfo'];
 
     /**
      * {@inheritdoc}.
