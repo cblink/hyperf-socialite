@@ -19,6 +19,7 @@ return [
             'client_id' => env('WEWORK_CLIENT_ID'),
             // provider secret
             'client_secret' => env('WEWORK_CLIENT_SECRET'),
+            'agent_id' => env('WEWORK_AGENT_ID'),
             'redirect' => env('WEWORK_REDIRECT_URI')
         ],
         // 企业微信
@@ -27,6 +28,7 @@ return [
             'client_id' => env('WEWORK_CLIENT_ID'),
             // corp secret
             'client_secret' => env('WEWORK_CLIENT_SECRET'),
+            'agent_id' => env('WEWORK_AGENT_ID'),
             'redirect' => env('WEWORK_REDIRECT_URI')
         ],
         // 企业微信扫码

@@ -43,6 +43,7 @@ class Provider extends AbstractProvider
     {
         return [
             'appid'         => $this->getClientId(),
+            'agentid'       => $this->getConfig('agent_id'),
             'redirect_uri' => $this->getRedirectUrl(),
             'response_type' => 'code',
             'scope'         => $this->formatScopes($this->scopes, $this->scopeSeparator),
