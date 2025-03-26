@@ -3,7 +3,7 @@
 namespace Cblink\Hyperf\Socialite;
 
 use Closure;
-use Hyperf\Utils\Str;
+use Hyperf\Stringable\Str;
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 

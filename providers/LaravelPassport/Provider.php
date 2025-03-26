@@ -5,7 +5,7 @@ namespace HyperfSocialiteProviders\LaravelPassport;
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Cblink\Hyperf\Socialite\Two\User;
 use GuzzleHttp\RequestOptions;
-use Hyperf\Utils\Arr;
+use Hyperf\Collection\Arr;
 
 class Provider extends AbstractProvider
 {

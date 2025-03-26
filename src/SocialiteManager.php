@@ -7,7 +7,7 @@ use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 
 class SocialiteManager extends Manager implements SocialiteInterface
 {

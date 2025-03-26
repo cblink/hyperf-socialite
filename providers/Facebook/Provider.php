@@ -4,7 +4,7 @@ namespace HyperfSocialiteProviders\Facebook;
 
 use Cblink\Hyperf\Socialite\Two\AbstractProvider;
 use Cblink\Hyperf\Socialite\Two\User;
-use Hyperf\Utils\Arr;
+use Hyperf\Collection\Arr;
 
 class Provider extends AbstractProvider
 {

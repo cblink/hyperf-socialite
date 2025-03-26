@@ -2,7 +2,7 @@
 
 namespace Cblink\Hyperf\Socialite;
 
-use Hyperf\Utils\Arr;
+use Hyperf\Collection\Arr;
 
 trait ConfigTrait
 {

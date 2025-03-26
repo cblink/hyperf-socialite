@@ -4,7 +4,7 @@ namespace Cblink\Hyperf\Socialite\One;
 
 use Hyperf\Contract\SessionInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
-use Hyperf\Utils\Collection;
+use Hyperf\Collection\Collection;
 use InvalidArgumentException;
 use League\OAuth1\Client\Credentials\TokenCredentials;
 use Cblink\Hyperf\Socialite\Contracts\Provider as ProviderContract;
