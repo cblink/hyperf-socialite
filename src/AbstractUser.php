@@ -169,6 +169,9 @@ abstract class AbstractUser implements ArrayAccess, User
      */
     public function offsetGet($offset)
     {
+        if (!$this->offsetExists($offset)) {
+            return '';
+        }
         return $this->user[$offset];
     }
 
